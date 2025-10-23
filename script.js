@@ -1,7 +1,7 @@
 const input = document.querySelector(".input-pokemon")
 const seccion = document.querySelector(".seccion-pokemon")
 const card = seccion.querySelector(".pokemon")
-let nombrePokemon;
+let identificadorPokemon;
 let nombre;
 let altura;
 let peso;
@@ -9,13 +9,18 @@ let tipos;
 let ruta;
 if (input) {
     input.addEventListener('change', function(event) {
-        nombrePokemon = event.target.value.trim()
+        identificadorPokemon = event.target.value.trim()
         
-        if (nombrePokemon === "") throw new Error("No has pasado ningun valor por el input")
-        fetch(`https://pokeapi.co/api/v2/pokemon/${nombrePokemon}`)
+        if (identificadorPokemon === "") throw new Error("No has pasado ningun valor por el input")
+        fetch(`https://pokeapi.co/api/v2/pokemon/${identificadorPokemon}`)
         .then(response => {
         if (!response.ok) {
-            aniadirMensaje("No existe ningún pokemon con ese nombre -> \"" + nombrePokemon + "\"")
+            if (isNaN(identificadorPokemon)){
+                aniadirMensaje("No existe ningún pokemon con ese nombre -> \"" + identificadorPokemon + "\"")
+            } else {
+                aniadirMensaje("No existe ningún pokemon con ese número de pokédex -> \"" + identificadorPokemon + "\"")
+            }
+            
             throw new Error("Pokémon no encontrado");
         }
         document.querySelector('.mensaje').style.display = "none";
@@ -58,9 +63,16 @@ async function obtenerPromesaDescripcion(url) {
         if (!response.ok) throw new Error("Pokémon no encontrado");
 
         const data = await response.json();
-        const resultado = data.flavor_text_entries.find(
-            descripcion => descripcion.language.name === "es"
+        let resultado = data.flavor_text_entries.find(
+            descripcion => descripcion.language.name === "es" 
         );
+        
+        if (!resultado) {
+            resultado = data.flavor_text_entries.find(
+            descripcion => descripcion.language.name === "en"
+            );
+        }
+        
         desc = resultado ? resultado.flavor_text : "No encontrada";
     } catch (error) {
         console.log(error);
