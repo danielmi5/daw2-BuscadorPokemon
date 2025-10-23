@@ -93,12 +93,12 @@ function aniadirNombres(){
     };
     
     card.querySelector(".pk-nombre").textContent = nombre;
-    card.querySelector(".pk-id").textContent = "Número de pokédex: " + id;
-    card.querySelector(".pk-altura").textContent = "Altura: " + altura + " m";
-    card.querySelector(".pk-peso").textContent = "Peso: " + peso + " Kg";
-    card.querySelector(".pk-desc").textContent = "Curiosidad: " + descripcion + " Kg";
-    if (tipos.length === 1) card.querySelector(".pk-tipos").textContent = "Tipo: " + tipos.map(tipo => t[tipo])
-    else card.querySelector(".pk-tipos").textContent = "Tipos: " + tipos.map(tipo => t[tipo]).join(" y ") 
+    card.querySelector(".pk-id").innerHTML = "<b>Número de pokédex: </b>" + id;
+    card.querySelector(".pk-altura").innerHTML = "<b>Altura:</b> " + altura + " m";
+    card.querySelector(".pk-peso").innerHTML = "<b>Peso:</b> " + peso + " Kg";
+    card.querySelector(".pk-desc").innerHTML = "<b>Descripción:</b> " + descripcion;
+    if (tipos.length === 1) card.querySelector(".pk-tipos").innerHTML = "<b>Tipo:</b> " + tipos.map(tipo => t[tipo])
+    else card.querySelector(".pk-tipos").innerHTML = "<b>Tipo:</b> " + tipos.map(tipo => t[tipo]).join(" y ") 
     card.querySelector(".pk-img img").src = ruta;
     card.style.display = 'flex';
 }
