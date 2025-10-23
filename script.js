@@ -22,19 +22,25 @@ if (input) {
         return response.json();
         })
         .then(data => {
-        nombre = data.name.charAt(0).toUpperCase() + data.name.slice(1)
-        altura = data.height / 10 // dm a m
-        peso = data.weight / 10 // Hg A Kg
-        ruta = data.sprites["other"]["official-artwork"]["front_default"]
-        console.log('Nombre:', data.name);
-        console.log('Altura:', data.height);
-        console.log('Peso:', data.weight);
-        console.log('Ruta', data.sprites["front_default"])
+            id = data.id
+            nombre = data.name.charAt(0).toUpperCase() + data.name.slice(1);
+            altura = data.height / 10; // dm a m
+            peso = data.weight / 10; // Hg A Kg
+            ruta = data.sprites["other"]["official-artwork"]["front_default"];
+            obtenerPromesaDescripcion(data.species.url).then(desc => {
+                descripcion = desc;
+                console.log("Nombre:", nombre);
+                console.log("Número de pokédex:", id);
+                console.log("Altura:", altura);
+                console.log("Peso:", peso);
+                console.log("Ruta", ruta)
+                console.log("Descripción: ", descripcion)
 
-            tipos = data.types.map(tipoInfo => tipoInfo.type.name);
-            console.log("Tipos:", tipos.join(", "));
-
-            aniadirNombres()
+                tipos = data.types.map(tipoInfo => tipoInfo.type.name);
+                console.log("Tipos:", tipos.join(", "));
+                console.log("-");
+                aniadirNombres()
+            })
         })
         .catch(error => {
         console.error("Error al buscar el Pokémon:", error.message);
@@ -44,6 +50,25 @@ if (input) {
 
     
 }
+
+async function obtenerPromesaDescripcion(url) {
+    let desc = "No encontrada";
+    try {
+        const response = await fetch(url);
+        if (!response.ok) throw new Error("Pokémon no encontrado");
+
+        const data = await response.json();
+        const resultado = data.flavor_text_entries.find(
+            descripcion => descripcion.language.name === "es"
+        );
+        desc = resultado ? resultado.flavor_text : "No encontrada";
+    } catch (error) {
+        console.log(error);
+    }
+    return desc;
+}
+
+
 
 function aniadirNombres(){
     const t = {
@@ -67,18 +92,21 @@ function aniadirNombres(){
         fairy: "hada"
     };
     
-    card.querySelector(".pk-nombre").textContent = nombre
-    card.querySelector(".pk-altura").textContent = "Altura: " + altura + " m"
-    card.querySelector(".pk-peso").textContent = "Peso: " + peso + " Kg"
-    if (tipos.length === 1) card.querySelector(".pk-tipos").textContent = "Tipo: " + tipos.map(tipo => t[tipo]) 
+    card.querySelector(".pk-nombre").textContent = nombre;
+    card.querySelector(".pk-id").textContent = "Número de pokédex: " + id;
+    card.querySelector(".pk-altura").textContent = "Altura: " + altura + " m";
+    card.querySelector(".pk-peso").textContent = "Peso: " + peso + " Kg";
+    card.querySelector(".pk-desc").textContent = "Curiosidad: " + descripcion + " Kg";
+    if (tipos.length === 1) card.querySelector(".pk-tipos").textContent = "Tipo: " + tipos.map(tipo => t[tipo])
     else card.querySelector(".pk-tipos").textContent = "Tipos: " + tipos.map(tipo => t[tipo]).join(" y ") 
-    card.querySelector(".pk-img img").src = ruta
+    card.querySelector(".pk-img img").src = ruta;
     card.style.display = 'flex';
 }
 
 function aniadirMensaje(mensaje){
     const msj = document.querySelector(".mensaje")
-    //card.style.display = 'none';
+    card.style.display = 'none';
+    msj.style.display = 'block';
     msj.textContent = mensaje
     
 }
