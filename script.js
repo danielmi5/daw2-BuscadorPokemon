@@ -15,7 +15,7 @@ if (input) {
         fetch(`https://pokeapi.co/api/v2/pokemon/${nombrePokemon}`)
         .then(response => {
         if (!response.ok) {
-            aniadirMensaje("No existe ningún pokemon con ese nombre -> " + nombrePokemon)
+            aniadirMensaje("No existe ningún pokemon con ese nombre -> \"" + nombrePokemon + "\"")
             throw new Error("Pokémon no encontrado");
         }
         document.querySelector('.mensaje').style.display = "none";
